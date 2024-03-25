@@ -1,17 +1,13 @@
 package com.bob.boboj.model.dto.question;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 /**
  * 更新请求
- *
+ * 给管理员用的，可以指定更多字段
  * @author BobW7
  * @from BobW7
  */

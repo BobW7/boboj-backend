@@ -1,6 +1,5 @@
 package com.bob.boboj.model.dto.question;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -8,7 +7,7 @@ import java.util.List;
 
 /**
  * 编辑请求
- *
+ * 给普通用户使用的，只能指定部分字段
  * @author BobW7
  * @from BobW7
  */

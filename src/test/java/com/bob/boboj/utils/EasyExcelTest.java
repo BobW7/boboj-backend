@@ -1,5 +1,6 @@
 package com.bob.boboj.utils;
 
+import cn.hutool.core.lang.hash.Hash;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import org.junit.jupiter.api.Test;
@@ -8,8 +9,10 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * EasyExcel 测试

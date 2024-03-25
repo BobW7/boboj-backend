@@ -1,6 +1,5 @@
 package com.bob.boboj.model.dto.question;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.bob.boboj.common.PageRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
