@@ -9,10 +9,7 @@ import com.bob.boboj.common.ResultUtils;
 import com.bob.boboj.constant.UserConstant;
 import com.bob.boboj.exception.BusinessException;
 import com.bob.boboj.exception.ThrowUtils;
-import com.bob.boboj.model.dto.question.QuestionAddRequest;
-import com.bob.boboj.model.dto.question.QuestionEditRequest;
-import com.bob.boboj.model.dto.question.QuestionQueryRequest;
-import com.bob.boboj.model.dto.question.QuestionUpdateRequest;
+import com.bob.boboj.model.dto.question.*;
 import com.bob.boboj.model.entity.Question;
 import com.bob.boboj.model.entity.User;
 import com.bob.boboj.model.vo.QuestionVO;
@@ -65,6 +62,14 @@ public class QuestionController {
         List<String> tags = questionAddRequest.getTags();
         if (tags != null) {
             question.setTags(GSON.toJson(tags));
+        }
+        List<JudgeCase> judgeCase = questionAddRequest.getJudgeCase();
+        if (judgeCase != null) {
+            question.setJudgeCase(GSON.toJson(judgeCase));
+        }
+        JudgeConfig judgeConfig = questionAddRequest.getJudgeConfig();
+        if (judgeConfig != null) {
+            question.setJudgeConfig(GSON.toJson(judgeConfig));
         }
         questionService.validQuestion(question, true);
         User loginUser = userService.getLoginUser(request);
@@ -157,7 +162,7 @@ public class QuestionController {
      */
     @PostMapping("/list/page/vo")
     public BaseResponse<Page<QuestionVO>> listQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
-            HttpServletRequest request) {
+                                                               HttpServletRequest request) {
         long current = questionQueryRequest.getCurrent();
         long size = questionQueryRequest.getPageSize();
         // 限制爬虫
@@ -176,7 +181,7 @@ public class QuestionController {
      */
     @PostMapping("/my/list/page/vo")
     public BaseResponse<Page<QuestionVO>> listMyQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
-            HttpServletRequest request) {
+                                                                 HttpServletRequest request) {
         if (questionQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }

@@ -30,7 +30,7 @@ public class QuestionEditRequest implements Serializable {
     private String content;
 
     /**
-     * 标签列表（json 数组）
+     * 标签列表
      */
     private List<String> tags;
 
@@ -41,12 +41,12 @@ public class QuestionEditRequest implements Serializable {
 
 
     /**
-     * 判题用例（JSON数组）
+     * 判题用例
      */
     private List<JudgeCase> judgeCase;
 
     /**
-     * 判题配置（JSON对象）
+     * 判题配置
      */
     private JudgeConfig judgeConfig;
 

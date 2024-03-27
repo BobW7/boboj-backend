@@ -1,6 +1,5 @@
 package com.bob.boboj.model.dto.question;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 import java.io.Serializable;
