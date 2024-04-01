@@ -8,9 +8,8 @@ import com.bob.boboj.judge.codesandbox.CodeSandBoxFactory;
 import com.bob.boboj.judge.codesandbox.CodeSandBoxLogProxy;
 import com.bob.boboj.judge.codesandbox.model.ExecuteCodeRequest;
 import com.bob.boboj.judge.codesandbox.model.ExecuteCodeResponse;
-import com.bob.boboj.judge.strategy.DefaultJudgeStrategy;
 import com.bob.boboj.judge.strategy.JudgeContext;
-import com.bob.boboj.judge.strategy.JudgeStrategy;
+import com.bob.boboj.judge.strategy.JudgeStrategyManager;
 import com.bob.boboj.model.dto.question.JudgeCase;
 import com.bob.boboj.model.dto.questionSubmit.JudgeInfo;
 import com.bob.boboj.model.entity.Question;
@@ -19,23 +18,29 @@ import com.bob.boboj.model.enums.QuestionSubmitStatusEnum;
 import com.bob.boboj.service.QuestionService;
 import com.bob.boboj.service.QuestionSubmitService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class JudgeServiceImpl implements JudgeService {
 
 
     @Value("${codesandbox.type:example}")
     private String type;
+
+    @Resource
+    private JudgeStrategyManager judgeStrategyManager;
     @Resource
     private QuestionService questionService;
     @Resource
     private QuestionSubmitService questionSubmitService;
 
     @Override
-    public QuestionSubmit doJudge(long questionSubmitId) {
+    public void doJudge(long questionSubmitId) {
+
         // 1、传入题目的提交id，获取对应的题目、提交信息（代码，编程语言等等）
         QuestionSubmit questionSubmit = questionSubmitService.getById(questionSubmitId);
         if (questionSubmit == null) {
@@ -46,15 +51,16 @@ public class JudgeServiceImpl implements JudgeService {
         if (question == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "题目不存在！");
         }
-        Integer status = questionSubmit.getStatus();
 
         // 2、如果题目的提交状态不为等待中，就不重复执行了，直接返回
+        Integer status = questionSubmit.getStatus();
         if (!status.equals(QuestionSubmitStatusEnum.WAITING.getValue())) {
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "题目已判定完毕或正在判定！");
         }
         QuestionSubmit questionSubmitUpdate = new QuestionSubmit();
         questionSubmitUpdate.setId(questionSubmitId);
         questionSubmitUpdate.setStatus(QuestionSubmitStatusEnum.RUNNING.getValue());
+
         boolean update = questionSubmitService.updateById(questionSubmitUpdate);
         if (!update) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "题目状态更新错误");
@@ -93,9 +99,9 @@ public class JudgeServiceImpl implements JudgeService {
         judgeContext.setOutputList(outputList);
         judgeContext.setJudgeCaseList(judgeCaseList);
         judgeContext.setQuestion(question);
+        judgeContext.setQuestionSubmit(questionSubmit);
 
-        JudgeStrategy judgeStrategy = new DefaultJudgeStrategy();
-        JudgeInfo judgeInfo = judgeStrategy.doJudge(judgeContext);
+        JudgeInfo judgeInfo = judgeStrategyManager.doJudge(judgeContext);
 
         //修改数据库中的判题结果
         questionSubmitUpdate = new QuestionSubmit();
@@ -106,6 +112,6 @@ public class JudgeServiceImpl implements JudgeService {
         if (!update) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "题目状态更新错误");
         }
-        return questionSubmitService.getById(questionId);
+        questionSubmitService.getById(questionId);
     }
 }
