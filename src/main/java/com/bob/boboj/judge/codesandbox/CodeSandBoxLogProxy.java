@@ -11,13 +11,13 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class CodeSandBoxLogProxy implements CodeSandBox {
 
-    private CodeSandBox codeSandBox;
+    private final CodeSandBox codeSandBox;
 
     @Override
     public ExecuteCodeResponse executeCode(ExecuteCodeRequest executeCodeRequest) {
-        log.info("代码请求信息" + executeCodeRequest.toString());
+        log.info("代码请求信息:" + executeCodeRequest.toString());
         ExecuteCodeResponse executeCodeResponse = codeSandBox.executeCode(executeCodeRequest);
-        log.info("代码响应信息" + executeCodeResponse.toString());
+        log.info("代码响应信息:" + executeCodeResponse.toString());
         return executeCodeResponse;
     }
 }

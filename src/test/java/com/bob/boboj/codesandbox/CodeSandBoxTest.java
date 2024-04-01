@@ -62,7 +62,7 @@ public class CodeSandBoxTest {
         // 静态工厂指定沙箱类型
         CodeSandBox codeSandBox = CodeSandBoxFactory.newInstance(type);
         // 将沙箱对象传入代理增强，使其输出日志信息
-        CodeSandBoxLogProxy codeSandBoxLogProxy = new CodeSandBoxLogProxy(codeSandBox);
+        codeSandBox = new CodeSandBoxLogProxy(codeSandBox);
 
         String code = "int main";
         String language = QuestionSubmitLanguageEnum.JAVA.getValue();
@@ -75,6 +75,6 @@ public class CodeSandBoxTest {
                 .inputList(inputList)
                 .build();
         // 用增强后的代理类来调用execute方法
-        ExecuteCodeResponse response = codeSandBoxLogProxy.executeCode(executeCodeRequest);
+        ExecuteCodeResponse response = codeSandBox.executeCode(executeCodeRequest);
     }
 }
