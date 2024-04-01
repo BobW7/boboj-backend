@@ -162,7 +162,7 @@ public class QuestionController {
         }
         User loginUser = userService.getLoginUser(request);
         //不是本人或者管理员，不能获取全量数据
-        if (!question.getUserId().equals(loginUser.getId()) || !userService.isAdmin(loginUser)) {
+        if (!question.getUserId().equals(loginUser.getId()) && !userService.isAdmin(loginUser)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         return ResultUtils.success(question);
